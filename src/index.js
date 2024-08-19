@@ -1,15 +1,29 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { Hono } from 'hono';
+import index from '../views/index.html';
+import detail from '../views/job-detail.html';
+import { JobController } from '../controller/JobController';
+import { CompanyController } from '../controller/CompanyController';
+import { GetProvince } from '../utils/GetProvince';
 
-export default {
-	async fetch(request, env, ctx) {
-		return new Response('Hello World!');
-	},
-};
+const app = new Hono();
+
+app.get('/', (c) => {
+	return c.html(index);
+});
+app.get('/job-show/:slug', (c) => {
+	return c.html(detail);
+});
+
+// api
+app.get('/api/v1/job/:slug', JobController.getJob);
+app.get('/jobs', JobController.getListJob);
+app.get('/company', CompanyController.getCompanyWithId);
+app.get('/api/v1/province', async (c) => {
+	const listProvince = await GetProvince();
+	return c.json({
+		status: 'success',
+		data: listProvince,
+	});
+});
+app.post('/add-job', JobController.addJob);
+export default app;
