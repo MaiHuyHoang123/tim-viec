@@ -48,4 +48,7 @@ export class Job {
 		let { results } = await c.env.DB.prepare(`SELECT * FROM Jobs where slug = ?1`).bind(slug).all();
 		return results;
 	}
+	static async totalJobs(c) {
+		return await c.env.DB.prepare(`SELECT COUNT(*) as total_count FROM Jobs`).first('total_count');
+	}
 }

@@ -5,21 +5,20 @@ import { createSlug } from '../utils/CreateSlug';
 export class JobController {
 	static async getListJob(c) {
 		const page = parseInt(c.req.query('page') || '1', 10);
-		const limit = c.req.query('limit') ?? 20;
+		const limit = c.req.query('limit') ?? 10;
 		const offset = page > 0 ? (page - 1) * limit : 0;
 		const keyword = c.req.query('keyword') ? '%' + c.req.query('keyword') + '%' : '%%';
 		const location = c.req.query('location') ? '%' + c.req.query('location') + '%' : '%%';
 		try {
-			const countResult = await c.env.DB.prepare(`SELECT COUNT(*) as total_count FROM Jobs`).all();
-			const totalItems = countResult[0]?.total_count || 0;
+			const totalJobs = await Job.totalJobs(c);
 			const results = await Job.getListJob(c, keyword, location, limit, offset);
 			return c.json({
 				success: true,
 				data: results,
 				pagination: {
 					currentPage: page,
-					totalItems: totalItems,
-					totalPages: Math.ceil(totalItems / limit),
+					totalItems: totalJobs,
+					totalPages: Math.ceil(totalJobs / limit),
 				},
 			});
 		} catch (error) {

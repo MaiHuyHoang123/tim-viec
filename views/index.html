@@ -73,7 +73,9 @@
 			<nav class="navbar fixed-top navbar-expand-lg" data-controller="page-header" data-page-header-target="header">
 				<div class="container icontainer-header">
 					<div class="nav-brand ime-8">
-						<a data-controller="utm-tracking" href="/"><img class="logo-itviec" alt="logo" src="https://timviec.pages.dev/assets/image/logo.png" width="108" height="40" /> </a>
+						<a data-controller="utm-tracking" href="/"
+							><img class="logo-itviec" alt="logo" src="https://timviec.pages.dev/assets/image/logo.png" width="108" height="40" />
+						</a>
 					</div>
 					<div class="navbar-collapse">
 						<ul class="navbar-nav me-auto igap-2 align-items-center">
@@ -86,12 +88,7 @@
 						</ul>
 						<ul class="navbar-nav ms-auto igap-6 align-items-center">
 							<li class="nav-item">
-								<a
-									data-controller="utm-tracking"
-									class="text-it-white text-hover-underline"
-									rel="canonical"
-									target="_blank"
-									href="/"
+								<a data-controller="utm-tracking" class="text-it-white text-hover-underline" rel="canonical" target="_blank" href="/"
 									>For Employers</a
 								>
 							</li>
@@ -126,8 +123,13 @@
 									<div class="d-flex flex-column flex-md-row">
 										<!-- / City -->
 										<div class="search-city flex-shrink-0 imb-2 imb-md-0 search-form-city-section">
-											<select name="location" id="city" tabindex="" class="" style="position: relative;
-    z-index: 1;transform: translateY(0);">
+											<select
+												name="location"
+												id="city"
+												tabindex=""
+												class=""
+												style="position: relative; z-index: 1; transform: translateY(0)"
+											>
 												<option value="">All Cities</option>
 												<template x-for="province in listProvince">
 													<option :value="province" x-text="province"></option>
@@ -950,7 +952,7 @@
 									</div>
 								</div>
 
-								<!-- <div class="pagination-search-jobs d-flex justify-content-center ipb-16" data-jobs--filter-target="pagination">
+								<div class="pagination-search-jobs d-flex justify-content-center ipb-16" data-jobs--filter-target="pagination" id="pagination-container">
 									<nav class="ipagination imt-10">
 										<div class="page current">1</div>
 
@@ -992,7 +994,7 @@
 											</a>
 										</div>
 									</nav>
-								</div> -->
+								</div>
 							</div>
 						</div>
 					</div>
@@ -1022,12 +1024,7 @@
 					<div class="col-lg-3">
 						<div class="footer-logo">
 							<div class="footer-slogan mx-auto ipt-2 text-md-start text-center">
-								<img
-									height="50"
-									class="logo-itviec"
-									alt="logo"
-									src="https://timviec.pages.dev/assets/image/logo.png"
-								/>
+								<img height="50" class="logo-itviec" alt="logo" src="https://timviec.pages.dev/assets/image/logo.png" />
 							</div>
 						</div>
 					</div>
@@ -1035,12 +1032,32 @@
 						<h4 class="footer-header imx-md-0 imx-5 text-silver-grey ipy-4 pe-none">Liên hệ với chúng tôi:</h4>
 						<div class="d-flex flex-column imx-md-0 imx-5 small-text text-dark-grey">
 							<div class="d-flex align-items-center ipb-3 pe-none">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgb(176, 172, 172);transform: ;msFilter:;"><path d="M17.707 12.293a.999.999 0 0 0-1.414 0l-1.594 1.594c-.739-.22-2.118-.72-2.992-1.594s-1.374-2.253-1.594-2.992l1.594-1.594a.999.999 0 0 0 0-1.414l-4-4a.999.999 0 0 0-1.414 0L3.581 5.005c-.38.38-.594.902-.586 1.435.023 1.424.4 6.37 4.298 10.268s8.844 4.274 10.269 4.298h.028c.528 0 1.027-.208 1.405-.586l2.712-2.712a.999.999 0 0 0 0-1.414l-4-4.001zm-.127 6.712c-1.248-.021-5.518-.356-8.873-3.712-3.366-3.366-3.692-7.651-3.712-8.874L7 4.414 9.586 7 8.293 8.293a1 1 0 0 0-.272.912c.024.115.611 2.842 2.271 4.502s4.387 2.247 4.502 2.271a.991.991 0 0 0 .912-.271L17 14.414 19.586 17l-2.006 2.005z"></path></svg>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									style="fill: rgb(176, 172, 172); transform: ; msfilter: "
+								>
+									<path
+										d="M17.707 12.293a.999.999 0 0 0-1.414 0l-1.594 1.594c-.739-.22-2.118-.72-2.992-1.594s-1.374-2.253-1.594-2.992l1.594-1.594a.999.999 0 0 0 0-1.414l-4-4a.999.999 0 0 0-1.414 0L3.581 5.005c-.38.38-.594.902-.586 1.435.023 1.424.4 6.37 4.298 10.268s8.844 4.274 10.269 4.298h.028c.528 0 1.027-.208 1.405-.586l2.712-2.712a.999.999 0 0 0 0-1.414l-4-4.001zm-.127 6.712c-1.248-.021-5.518-.356-8.873-3.712-3.366-3.366-3.692-7.651-3.712-8.874L7 4.414 9.586 7 8.293 8.293a1 1 0 0 0-.272.912c.024.115.611 2.842 2.271 4.502s4.387 2.247 4.502 2.271a.991.991 0 0 0 .912-.271L17 14.414 19.586 17l-2.006 2.005z"
+									></path>
+								</svg>
 
 								<p class="ims-2">SĐT: (+84) 392362421</p>
 							</div>
 							<div class="d-flex align-items-center ipb-3 pe-none">
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: rgb(177, 177, 177);transform: ;msFilter:;"><path d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2v.511l-8 6.223-8-6.222V6h16zM4 18V9.044l7.386 5.745a.994.994 0 0 0 1.228 0L20 9.044 20.002 18H4z"></path></svg>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									style="fill: rgb(177, 177, 177); transform: ; msfilter: "
+								>
+									<path
+										d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2v.511l-8 6.223-8-6.222V6h16zM4 18V9.044l7.386 5.745a.994.994 0 0 0 1.228 0L20 9.044 20.002 18H4z"
+									></path>
+								</svg>
 
 								<p class="ims-2">Email: gutjob@gmail.com</p>
 							</div>
@@ -1051,7 +1068,6 @@
 			<hr class="my-0 opacity-25" />
 			<div class="container-xxl p-0 ipy-5 d-flex justify-content-center footer-copyright">
 				<p class="normal-text tiny-text text-dark-grey ipe-4">Copyright &copy; @</p>
-				
 			</div>
 		</footer>
 		<!-- <script src="https://timviec.pages.dev/assets/js/render-job.js"></script> -->
@@ -1063,9 +1079,11 @@
 					firstHalf: [],
 					secondHalf: [],
 					listProvince: [],
+					pagination: {},
 					async init() {
-						this.init_data();
-						this.getListProvince()
+						await this.init_data();
+						await this.getListProvince();
+						await this.createPagination(this.pagination);
 					},
 					async init_data() {
 						var queryString = window.location.search;
@@ -1088,6 +1106,7 @@
 						} catch (err) {
 							console.log(err);
 						}
+						this.pagination = result.pagination;
 						this.data = result.data;
 						for (item of this.data) {
 							if (item.lower_bound == 0 && item.upper_bound == 0) {
@@ -1105,8 +1124,53 @@
 						}
 						[this.firstHalf, this.secondHalf] = this.splitArrayIntoTwo(this.data);
 					},
-					async getListProvince(){
-						this.listProvince =	(await (await fetch("https://crawler-job.cocatvn2003.workers.dev/api/v1/province")).json()).data
+					async getListProvince() {
+						this.listProvince = (await (await fetch('https://crawler-job.cocatvn2003.workers.dev/api/v1/province')).json()).data;
+					},
+					createPagination(pagination) {
+						const paginationContainer = document.getElementById('pagination-container');
+						paginationContainer.innerHTML = ''; // Xóa nội dung cũ
+
+						const { currentPage, totalPages } = pagination;
+						const delta = 2; // Số lượng trang xung quanh trang hiện tại
+						const range = [];
+
+						for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+							range.push(i);
+						}
+
+						if (currentPage - delta > 2) {
+							range.unshift('...');
+						}
+						if (currentPage + delta < totalPages - 1) {
+							range.push('...');
+						}
+
+						range.unshift(1);
+						if (totalPages > 1) {
+							range.push(totalPages);
+						}
+
+						range.forEach((page) => {
+							const button = document.createElement('button');
+							button.textContent = page;
+							button.className = 'pagination-button';
+
+							if (page === '...') {
+								button.disabled = true;
+							} else {
+								if (page === currentPage) {
+									button.disabled = true;
+									button.style.fontWeight = 'bold';
+								}
+								// Thêm sự kiện click để chuyển trang
+								button.addEventListener('click', () => {
+									fetchDataForPage(page);
+								});
+							}
+
+							paginationContainer.appendChild(button);
+						});
 					},
 					daysPassed(dateString) {
 						// Bước 1: Chuyển đổi chuỗi ngày tháng thành đối tượng Date
