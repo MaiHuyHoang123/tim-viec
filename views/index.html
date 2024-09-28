@@ -48,7 +48,11 @@
 			href="https://timviec.pages.dev/assets/css/application-7c1ece797c5800ad742bb6b0a49afffc42f740f89b24b13982cd2c8ccfc0fb0a.css"
 			data-turbo-track="reload"
 		/>
-
+		<link
+			rel="stylesheet"
+			href="https://timviec.pages.dev/assets/css/custom.css"
+			data-turbo-track="reload"
+		/>
 		<link
 			rel="modulepreload"
 			href="https://timviec.pages.dev/assets/js/turbo.min-14b3b6b1cc0e0602d2e3e564809fa36f480beaca91410d9e58c4ace783d8f903.js"
@@ -70,23 +74,23 @@
 	</head>
 	<body class="search_jobs" data-env="production" x-data="app">
 		<header class="header">
-			<nav class="navbar fixed-top navbar-expand-lg" data-controller="page-header" data-page-header-target="header">
-				<div class="container icontainer-header">
+			<nav class="navbar fixed-top navbar-expand-lg fixed lg:h-inherit" data-controller="page-header" data-page-header-target="header">
+				<div class="container icontainer-header lg:h-inherit lg:flex-nowrap">
 					<div class="nav-brand ime-8">
 						<a data-controller="utm-tracking" href="/"
 							><img class="logo-itviec" alt="logo" src="https://timviec.pages.dev/assets/image/logo.png" width="108" height="40" />
 						</a>
 					</div>
-					<div class="navbar-collapse">
-						<ul class="navbar-nav me-auto igap-2 align-items-center">
+					<div class="navbar-collapse lg:h-inherit">
+						<ul class="navbar-nav me-auto igap-2 align-items-center lg:flex lg:row-reverse lg:h-inherit">
 							<li class="nav-item main-menu position-relative">
-								<a data-controller="utm-tracking" class="text-reset d-flex align-items-center ipx-2" href="#">All Jobs </a>
+								<a data-controller="utm-tracking" class="text-reset d-flex align-items-center ipx-2" href="/">All Jobs </a>
 							</li>
-							<li class="nav-item main-menu position-relative">
+							<li class="nav-item main-menu position-relative lg:hidden">
 								<a data-controller="utm-tracking" class="text-reset d-flex align-items-center ipx-2" href="#">IT Company </a>
 							</li>
 						</ul>
-						<ul class="navbar-nav ms-auto igap-6 align-items-center">
+						<ul class="navbar-nav ms-auto igap-6 align-items-center lg:hidden">
 							<li class="nav-item">
 								<a data-controller="utm-tracking" class="text-it-white text-hover-underline" rel="canonical" target="_blank" href="/"
 									>For Employers</a
@@ -120,9 +124,9 @@
 							<!-- Last updated: "2024-08-07 17:06:58 +0700"-->
 							<div class="search-box">
 								<form action="/" method="get" id="search-form" @submit.prevent="searchJob">
-									<div class="d-flex flex-column flex-md-row">
+									<div class="d-flex flex-column flex-lg-row">
 										<!-- / City -->
-										<div class="search-city flex-shrink-0 imb-2 imb-md-0 search-form-city-section">
+										<div class="search-city flex-shrink-0 imb-2 imb-lg-0 search-form-city-section lg:pl-3">
 											<select
 												name="location"
 												id="city"
@@ -953,46 +957,8 @@
 								</div>
 
 								<div class="pagination-search-jobs d-flex justify-content-center ipb-16" data-jobs--filter-target="pagination" id="pagination-container">
-									<nav class="ipagination imt-10">
-										<div class="page current">1</div>
-
-										<div class="page">
-											<a
-												rel="next"
-												data-controller="search--pagination"
-												data-action="ajax:success-&gt;search--pagination#paginate"
-												data-remote="true"
-												href="/it-jobs/java?click_source=Navigation+menu&amp;job_selected=java-backend-developer-spring-sql-abbank-2942&amp;page=2&amp;source=search_job"
-												>2</a
-											>
-										</div>
-
-										<div class="page gap">&hellip;</div>
-
-										<div class="page">
-											<a
-												data-controller="search--pagination"
-												data-action="ajax:success-&gt;search--pagination#paginate"
-												data-remote="true"
-												href="/it-jobs/java?click_source=Navigation+menu&amp;job_selected=java-backend-developer-spring-sql-abbank-2942&amp;page=11&amp;source=search_job"
-												>11</a
-											>
-										</div>
-
-										<div class="page next">
-											<a
-												rel="next"
-												data-controller="search--pagination"
-												data-action="ajax:success-&gt;search--pagination#paginate"
-												data-remote="true"
-												href="/it-jobs/java?click_source=Navigation+menu&amp;job_selected=java-backend-developer-spring-sql-abbank-2942&amp;page=2&amp;source=search_job"
-												><svg class="feather-icon icon-sm">
-													<use
-														href="https://itviec.com/assets/feather-icons-sprite-520cd3770a1002f7c87bd1ba253464228ad112abb4c34d81c8cda9f937487a49.svg#chevron-right"
-													></use>
-												</svg>
-											</a>
-										</div>
+									<nav class="ipagination imt-10" id="ipagination">
+										
 									</nav>
 								</div>
 							</div>
@@ -1092,14 +1058,13 @@
 						var urlParams = new URLSearchParams(queryString);
 
 						// Lấy giá trị của các tham số
-						var keyword = urlParams.get('keyword'); // "JohnDoe"
-						var location = urlParams.get('location'); // "25"
-						var api = 'https://crawler-job.cocatvn2003.workers.dev/jobs?page=1';
-						if (keyword) {
-							api = api + '&keyword=' + keyword;
-						}
-						if (location) {
-							api = api + '&location=' + location;
+						var keyword = urlParams.get('keyword') ?? "";
+						var location = urlParams.get('location') ?? "";
+						page = urlParams.get('page') ?? 1;
+						if(keyword || location){
+							var api = `https://crawler-job.cocatvn2003.workers.dev/search?page=${page}&keyword=${keyword}&location=${location}`
+						}else{
+							var api = `https://crawler-job.cocatvn2003.workers.dev/jobs?page=${page}`;
 						}
 						try {
 							var result = await (await fetch(api)).json();
@@ -1128,7 +1093,7 @@
 						this.listProvince = (await (await fetch('https://crawler-job.cocatvn2003.workers.dev/api/v1/province')).json()).data;
 					},
 					createPagination(pagination) {
-						const paginationContainer = document.getElementById('pagination-container');
+						const paginationContainer = document.getElementById('ipagination');
 						paginationContainer.innerHTML = ''; // Xóa nội dung cũ
 
 						const { currentPage, totalPages } = pagination;
@@ -1154,23 +1119,31 @@
 						range.forEach((page) => {
 							const button = document.createElement('button');
 							button.textContent = page;
-							button.className = 'pagination-button';
+							button.className = 'page';
 
 							if (page === '...') {
+								button.classList.add("gap")
 								button.disabled = true;
 							} else {
 								if (page === currentPage) {
+									button.classList.add("current")
 									button.disabled = true;
 									button.style.fontWeight = 'bold';
 								}
 								// Thêm sự kiện click để chuyển trang
 								button.addEventListener('click', () => {
-									fetchDataForPage(page);
+									this.fetchDataForPage(page);
 								});
 							}
 
 							paginationContainer.appendChild(button);
 						});
+					},
+					fetchDataForPage(page) {
+						let url = new URL(window.location.href);
+						url.searchParams.delete('page');
+						url.searchParams.append('page', page);
+						window.location.href = url.toString();
 					},
 					daysPassed(dateString) {
 						// Bước 1: Chuyển đổi chuỗi ngày tháng thành đối tượng Date

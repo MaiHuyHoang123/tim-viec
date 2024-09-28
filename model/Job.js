@@ -18,7 +18,7 @@ export class Job {
 		} = data;
 		const query =
 			'INSERT INTO Jobs (title, description, experience, requirement, location, url, lower_bound, upper_bound, expiration_date, job_type, created_at, unit, slug, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-		const { success } = await c.env.DB.prepare(query)
+		const result = await c.env.DB.prepare(query)
 			.bind(
 				title ?? '',
 				description ?? '',
@@ -36,12 +36,10 @@ export class Job {
 				company_id ?? ''
 			)
 			.run();
-		return success;
+		return result;
 	}
-	static async getListJob(c, keyword, location, limit, offset) {
-		let { results } = await c.env.DB.prepare(`SELECT * FROM Jobs where title like ?1 and location like ?2 LIMIT ?3 OFFSET ?4`)
-			.bind(keyword, location, limit, offset)
-			.all();
+	static async getListJob(c, limit, offset) {
+		let { results } = await c.env.DB.prepare(`SELECT * FROM Jobs LIMIT ?1 OFFSET ?2`).bind(limit, offset).all();
 		return results;
 	}
 	static async getJob(c, slug) {
@@ -50,5 +48,17 @@ export class Job {
 	}
 	static async totalJobs(c) {
 		return await c.env.DB.prepare(`SELECT COUNT(*) as total_count FROM Jobs`).first('total_count');
+	}
+	static async getJobById(c, ids) {
+		// Tạo câu lệnh truy vấn với IN
+		ids = ids.filter((item) => typeof parseInt(item) === 'number' && !isNaN(item) && item);
+		ids.map((item) => {
+			return parseInt(item);
+		});
+		const placeholders = ids.map((e) => e).join(',');
+		const sql = `SELECT * FROM Jobs WHERE id IN (${placeholders})`;
+		// Thực thi truy vấn
+		const { results } = await c.env.DB.prepare(sql).all();
+		return results;
 	}
 }

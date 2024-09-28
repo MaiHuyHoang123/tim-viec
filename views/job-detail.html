@@ -47,7 +47,11 @@
 			href="https://timviec.pages.dev/assets/css/application-7c1ece797c5800ad742bb6b0a49afffc42f740f89b24b13982cd2c8ccfc0fb0a.css"
 			data-turbo-track="reload"
 		/>
-
+		<link
+			rel="stylesheet"
+			href="https://timviec.pages.dev/assets/css/custom.css"
+			data-turbo-track="reload"
+		/>
 		<link
 			rel="modulepreload"
 			href="https://timviec.pages.dev/assets/js/turbo.min-14b3b6b1cc0e0602d2e3e564809fa36f480beaca91410d9e58c4ace783d8f903.js"
@@ -69,28 +73,25 @@
 	</head>
 	<body class="jobs_show" data-env="production" x-data="app">
 		<header class="header">
-			<nav class="navbar fixed-top navbar-expand-lg" data-controller="page-header" data-page-header-target="header">
-				<div class="container icontainer-header">
+			<nav class="navbar fixed-top navbar-expand-lg fixed lg:h-inherit" data-controller="page-header" data-page-header-target="header">
+				<div class="container icontainer-header lg:h-inherit lg:flex-nowrap">
 					<div class="nav-brand ime-8">
-						<a data-controller="utm-tracking" href="/"><img class="logo-itviec" alt="logo" src="https://timviec.pages.dev/assets/image/logo.png" width="108" height="40" /> </a>
+						<a data-controller="utm-tracking" href="/"
+							><img class="logo-itviec" alt="logo" src="https://timviec.pages.dev/assets/image/logo.png" width="108" height="40" />
+						</a>
 					</div>
-					<div class="navbar-collapse">
-						<ul class="navbar-nav me-auto igap-2 align-items-center">
+					<div class="navbar-collapse lg:h-inherit">
+						<ul class="navbar-nav me-auto igap-2 align-items-center lg:flex lg:row-reverse lg:h-inherit">
 							<li class="nav-item main-menu position-relative">
-								<a data-controller="utm-tracking" class="text-reset d-flex align-items-center ipx-2" href="#">All Jobs </a>
+								<a data-controller="utm-tracking" class="text-reset d-flex align-items-center ipx-2" href="/">All Jobs </a>
 							</li>
-							<li class="nav-item main-menu position-relative">
+							<li class="nav-item main-menu position-relative lg:hidden">
 								<a data-controller="utm-tracking" class="text-reset d-flex align-items-center ipx-2" href="#">IT Company </a>
 							</li>
 						</ul>
-						<ul class="navbar-nav ms-auto igap-6 align-items-center">
+						<ul class="navbar-nav ms-auto igap-6 align-items-center lg:hidden">
 							<li class="nav-item">
-								<a
-									data-controller="utm-tracking"
-									class="text-it-white text-hover-underline"
-									rel="canonical"
-									target="_blank"
-									href="/"
+								<a data-controller="utm-tracking" class="text-it-white text-hover-underline" rel="canonical" target="_blank" href="/"
 									>For Employers</a
 								>
 							</li>
@@ -553,7 +554,6 @@
 					jobRecommend: [],
 					async init() {
 						await this.init_data();
-						await this.getJobRecommend();
 						document.getElementsByTagName('title')[0].innerText = this.data.title
 					},
 					async init_data() {
@@ -574,10 +574,11 @@
 						}
 						this.data.requirement = this.data.requirement.split(',');
 						this.data.daysPosted = 'Được đăng ' + this.daysPassed(this.data.created_at) + ' ngày trước';
+						await this.getJobRecommend(this.data.slug);
 						this.data.slug = 'https://crawler-job.cocatvn2003.workers.dev/job-show/' + this.data.slug;
 					},
-					async getJobRecommend(){
-						var api = 'https://crawler-job.cocatvn2003.workers.dev/jobs?page=1&limit=8';
+					async getJobRecommend(slug){
+						var api = 'https://crawler-job.cocatvn2003.workers.dev/similar-job?slug=' + slug;
 						try {
 							var result = await (await fetch(api)).json();
 						} catch (err) {
