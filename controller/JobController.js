@@ -1,17 +1,16 @@
 import { Company } from '../model/Company';
 import { Job } from '../model/Job';
 import { createSlug } from '../utils/CreateSlug';
+import { SearchController } from './SearchController';
 
 export class JobController {
 	static async getListJob(c) {
 		const page = parseInt(c.req.query('page') || '1', 10);
 		const limit = c.req.query('limit') ?? 10;
 		const offset = page > 0 ? (page - 1) * limit : 0;
-		const keyword = c.req.query('keyword') ? '%' + c.req.query('keyword') + '%' : '%%';
-		const location = c.req.query('location') ? '%' + c.req.query('location') + '%' : '%%';
 		try {
+			const results = await Job.getListJob(c, limit, offset);
 			const totalJobs = await Job.totalJobs(c);
-			const results = await Job.getListJob(c, keyword, location, limit, offset);
 			return c.json({
 				success: true,
 				data: results,
@@ -41,7 +40,6 @@ export class JobController {
 		try {
 			// Đọc thông tin từ request body
 			const body = await c.req.json();
-			console.log(body);
 			// Ví dụ body có cấu trúc như sau: { "name": "John", "age": 30 }
 			const { title, description, location, experience, requirement, salary, expiration_date, job_type, created_at, url, company } = body;
 			const number = salary.match(/\d+/g);
@@ -74,9 +72,9 @@ export class JobController {
 			}
 			// Thực hiện lệnh SQL để lưu thông tin vào database
 			const info_company = await Company.addCompany(c, company);
-			const company_id = await Company.getIdLast(c);
+			const company_id = info_company.meta.last_row_id;
 			const slug = createSlug(title);
-			const status = await Job.addJob(c, {
+			const info_job = await Job.addJob(c, {
 				title,
 				description,
 				location,
@@ -92,10 +90,37 @@ export class JobController {
 				slug,
 				company_id,
 			});
+			await JobController.jobEmbedding(info_job.meta.last_row_id, description, location);
 			return c.json({ message: 'saved successfully', status: 'success' }, 200);
 		} catch (error) {
 			console.error(error);
 			return c.json({ message: error }, 500);
 		}
+	}
+	static async jobEmbedding(id, text, location) {
+		const esUrl = 'https://67263ea0658b4f0ba0ea6543031201c5.asia-southeast1.gcp.elastic-cloud.com:443/my_index_2/_doc';
+		const esAuth = 'ApiKey c2pBUEFKSUJ1T25meWlsZHBoU1Q6Y2RFY1RTRXVRay1FcEdsTXdINEpLUQ=='; // Use your ES credentials
+		const description = await SearchController.embedding(text);
+		const esQuery = {
+			description,
+			id,
+			location,
+		};
+		const response = await fetch(esUrl, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: esAuth,
+			},
+			body: JSON.stringify(esQuery),
+		});
+		return true;
+	}
+
+	static async getVector(c, text) {
+		const embeddings = await c.env.AI.run('@cf/baai/bge-base-en-v1.5', {
+			text: text,
+		});
+		return embeddings.data[0];
 	}
 }
