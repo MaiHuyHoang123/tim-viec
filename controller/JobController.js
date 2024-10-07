@@ -90,17 +90,16 @@ export class JobController {
 				slug,
 				company_id,
 			});
-			await JobController.jobEmbedding(info_job.meta.last_row_id, description, location);
+			await JobController.jobEmbedding(c, info_job.meta.last_row_id, title + description, location);
 			return c.json({ message: 'saved successfully', status: 'success' }, 200);
 		} catch (error) {
-			console.error(error);
 			return c.json({ message: error }, 500);
 		}
 	}
-	static async jobEmbedding(id, text, location) {
-		const esUrl = 'https://67263ea0658b4f0ba0ea6543031201c5.asia-southeast1.gcp.elastic-cloud.com:443/my_index_2/_doc';
-		const esAuth = 'ApiKey c2pBUEFKSUJ1T25meWlsZHBoU1Q6Y2RFY1RTRXVRay1FcEdsTXdINEpLUQ=='; // Use your ES credentials
-		const description = await SearchController.embedding(text);
+	static async jobEmbedding(c, id, text, location) {
+		const esUrl = c.env.URL_ELASTIC + '/' + c.env.INDEX_DB + '/_doc';
+		const esAuth = 'ApiKey ' + c.env.API_KEY;
+		const description = await JobController.getVector(c, text);
 		const esQuery = {
 			description,
 			id,

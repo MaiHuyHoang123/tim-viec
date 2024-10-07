@@ -39,11 +39,11 @@ export class Job {
 		return result;
 	}
 	static async getListJob(c, limit, offset) {
-		let { results } = await c.env.DB.prepare(`SELECT * FROM Jobs LIMIT ?1 OFFSET ?2`).bind(limit, offset).all();
+		let { results } = await c.env.DB.prepare(`SELECT * FROM Jobs ORDER BY created_at LIMIT ?1 OFFSET ?2`).bind(limit, offset).all();
 		return results;
 	}
 	static async getJob(c, slug) {
-		let { results } = await c.env.DB.prepare(`SELECT * FROM Jobs where slug = ?1`).bind(slug).all();
+		let { results } = await c.env.DB.prepare(`SELECT * FROM Jobs where slug = ?1 ORDER BY created_at`).bind(slug).all();
 		return results;
 	}
 	static async totalJobs(c) {
@@ -56,7 +56,7 @@ export class Job {
 			return parseInt(item);
 		});
 		const placeholders = ids.map((e) => e).join(',');
-		const sql = `SELECT * FROM Jobs WHERE id IN (${placeholders})`;
+		const sql = `SELECT * FROM Jobs WHERE id IN (${placeholders}) ORDER BY created_at`;
 		// Thực thi truy vấn
 		const { results } = await c.env.DB.prepare(sql).all();
 		return results;
