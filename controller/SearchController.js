@@ -10,10 +10,10 @@ export class SearchController {
 		const offset = page > 0 ? (page - 1) * limit : 0;
 		var results = JSON.parse(await c.env.KV.get(keyword, { cacheTtl: 1800 }));
 		if (results === null) {
-			const esUrl = 'https://67263ea0658b4f0ba0ea6543031201c5.asia-southeast1.gcp.elastic-cloud.com:443/my_index_2/_search';
-			const esAuth = 'ApiKey c2pBUEFKSUJ1T25meWlsZHBoU1Q6Y2RFY1RTRXVRay1FcEdsTXdINEpLUQ==';
+			const esUrl = c.env.URL_ELASTIC + '/' + c.env.INDEX_DB + '/_search';
+			const esAuth = 'ApiKey ' + c.env.API_KEY;
 
-			const description = await SearchController.embedding(keyword);
+			const description = await JobController.getVector(c, keyword);
 			const esQuery = {
 				query: {
 					script_score: {
@@ -24,12 +24,13 @@ export class SearchController {
 								query_vector: description,
 							},
 						},
-						min_score: 0.4,
+						min_score: 0.5,
 					},
 				},
 			};
 			if (location) {
-				esQuery.query.script_score.query.match = location;
+				esQuery.query.script_score.query.match = {};
+				esQuery.query.script_score.query.match.location = location;
 			} else {
 				esQuery.query.script_score.query.match_all = {};
 			}
@@ -63,12 +64,10 @@ export class SearchController {
 	}
 	static async getSimilarJob(c) {
 		const slug = c.req.query('slug');
-		const esUrl = 'https://67263ea0658b4f0ba0ea6543031201c5.asia-southeast1.gcp.elastic-cloud.com:443/my_index_2/_search';
-		const esAuth = 'ApiKey c2pBUEFKSUJ1T25meWlsZHBoU1Q6Y2RFY1RTRXVRay1FcEdsTXdINEpLUQ==';
-
+		const esUrl = c.env.URL_ELASTIC + '/' + c.env.INDEX_DB + '/_search';
+		const esAuth = 'ApiKey ' + c.env.API_KEY;
 		const job = await Job.getJob(c, slug);
-
-		const description = await JobController.getVector(c, job.description);
+		const description = await JobController.getVector(c, job[0].title + job[0].description);
 		const esQuery = {
 			query: {
 				knn: {
@@ -90,6 +89,7 @@ export class SearchController {
 			})
 		).json();
 		const ids = response.hits.hits.map((e) => e._source.id);
+		console.log(ids);
 		const results = await Job.getJobById(c, ids);
 		return c.json({
 			success: true,

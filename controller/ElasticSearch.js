@@ -1,7 +1,7 @@
 export class ElasticSearch {
 	static async getAllDoc(c) {
-		const esUrl = 'https://67263ea0658b4f0ba0ea6543031201c5.asia-southeast1.gcp.elastic-cloud.com:443/my_index_2/_search';
-		const esAuth = 'ApiKey c2pBUEFKSUJ1T25meWlsZHBoU1Q6Y2RFY1RTRXVRay1FcEdsTXdINEpLUQ==';
+		const esUrl = c.env.URL_ELASTIC + '/' + c.env.INDEX_DB + '/_search';
+		const esAuth = 'ApiKey ' + c.env.API_KEY;
 		const esQuery = {
 			size: 10000,
 			query: {
@@ -24,8 +24,8 @@ export class ElasticSearch {
 		var results = await ElasticSearch.getAllDoc(c);
 		const ids = results.map((e) => e._id);
 		for (var element of ids) {
-			var esUrl = 'https://67263ea0658b4f0ba0ea6543031201c5.asia-southeast1.gcp.elastic-cloud.com:443/my_index_2/_doc/' + element;
-			var esAuth = 'ApiKey c2pBUEFKSUJ1T25meWlsZHBoU1Q6Y2RFY1RTRXVRay1FcEdsTXdINEpLUQ==';
+			const esUrl = c.env.URL_ELASTIC + '/' + c.env.INDEX_DB + '/_doc/' + element;
+			const esAuth = 'ApiKey ' + c.env.API_KEY;
 			var response = await (
 				await fetch(esUrl, {
 					method: 'DELETE',
@@ -35,7 +35,6 @@ export class ElasticSearch {
 					},
 				})
 			).json();
-			console.log(response);
 			if (response.result === 'not_found') {
 				return c.json("document doesn't exist", 400);
 			}

@@ -33,6 +33,6 @@ app.get('/api/v1/province', async (c) => {
 });
 app.post('/add-job', JobController.addJob);
 app.get('/search', SearchController.searchVector);
-app.get('/similar-job', SearchController.searchVector);
+app.get('/similar-job', SearchController.getSimilarJob);
 app.delete('/delete-all', ElasticSearch.deleteAllDoc);
 export default app;
